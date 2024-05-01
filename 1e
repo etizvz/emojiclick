@@ -1,0 +1,78 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+  <title>Interactive Particle System with Arabic Letters</title>
+</head>
+<body>
+  <script>
+    let particles = [];
+    let arabicLetters = ["ا", "ب", "ت", "ث", "ج", "ح", "خ", "د", "ذ", "ر", "ز", "س", "ش", "ص", "ض", "ط", "ظ", "ع", "غ", "ف"];
+    let emojiIcons = ["😊", "😎", "🌟", "💖", "🌈", "✨", "🌺", "🚀", "🎉", "🦄"];
+
+    function setup() {
+      createCanvas(600, 400);
+      noStroke();
+    }
+
+    function draw() {
+      background(255);
+
+      
+      for (let i = particles.length - 1; i >= 0; i--) {
+        particles[i].display();
+        particles[i].update();
+
+        if (particles[i].isOutOfBounds()) {
+          particles.splice(i, 1);
+        }
+      }
+    }
+
+    function mousePressed() {
+      for (let i = 0; i < 10; i++) {
+        let x = mouseX + random(-20, 20);
+        let y = mouseY + random(-20, 20);
+        let content = random() > 0.5 ? getRandomLetter() : getRandomEmoji();
+        let particle = new Particle(x, y, content);
+        particles.push(particle);
+      }
+    }
+
+    function getRandomLetter() {
+      return arabicLetters[Math.floor(random(arabicLetters.length))];
+    }
+
+    function getRandomEmoji() {
+      return emojiIcons[Math.floor(random(emojiIcons.length))];
+    }
+
+    class Particle {
+      constructor(x, y, content) {
+        this.x = x;
+        this.y = y;
+        this.size = 20;
+        this.content = content;
+        this.xSpeed = random(-2, 2);
+        this.ySpeed = random(-2, 2);
+      }
+
+      display() {
+        fill(random(255), random(255), random(255));
+        textSize(this.size);
+        textAlign(CENTER, CENTER);
+        text(this.content, this.x, this.y);
+      }
+
+      update() {
+        this.x += this.xSpeed;
+        this.y += this.ySpeed;
+      }
+
+      isOutOfBounds() {
+        return this.x < 0 || this.x > width || this.y < 0 || this.y > height;
+      }
+    }
+  </script>
+</body>
+</html>
